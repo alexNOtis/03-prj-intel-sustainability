@@ -272,6 +272,21 @@
       return documentLang.split('-')[0];
     }
 
+    function getBrowserLanguage() {
+      const preferredLanguages = navigator.languages || [navigator.language || 'en'];
+      const supportedLanguageCodes = Object.keys(translations);
+
+      for (const preferredLanguage of preferredLanguages) {
+        const languageCode = preferredLanguage.toLowerCase().split('-')[0];
+
+        if (supportedLanguageCodes.includes(languageCode)) {
+          return languageCode;
+        }
+      }
+
+      return 'en';
+    }
+
     function applyDirection(languageCode) {
       const normalizedLanguage = (languageCode || 'en').toLowerCase().split('-')[0];
       const isRtl = rtlLanguages.has(normalizedLanguage);
@@ -1133,7 +1148,9 @@
       applyAccessibility(event.target.value);
     });
 
-    applyTranslations(languageSelect.value);
+    const initialLanguage = getBrowserLanguage();
+    languageSelect.value = initialLanguage;
+    applyTranslations(initialLanguage);
     applyAccessibility(accessibilitySelect.value);
     detectLanguageAndDirection();
   </script>
