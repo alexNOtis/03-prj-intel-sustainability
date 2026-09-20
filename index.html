@@ -273,11 +273,21 @@
     }
 
     function applyDirection(languageCode) {
-      const isRtl = rtlLanguages.has(languageCode);
+      const normalizedLanguage = (languageCode || 'en').toLowerCase().split('-')[0];
+      const isRtl = rtlLanguages.has(normalizedLanguage);
       const direction = isRtl ? 'rtl' : 'ltr';
-      document.documentElement.setAttribute('dir', direction);
-      document.body.setAttribute('dir', direction);
-      document.documentElement.setAttribute('lang', languageCode || 'en');
+
+      if (document.documentElement.lang !== normalizedLanguage) {
+        document.documentElement.setAttribute('lang', normalizedLanguage);
+      }
+
+      if (document.documentElement.getAttribute('dir') !== direction) {
+        document.documentElement.setAttribute('dir', direction);
+      }
+
+      if (document.body.getAttribute('dir') !== direction) {
+        document.body.setAttribute('dir', direction);
+      }
     }
 
     function detectLanguageAndDirection() {
